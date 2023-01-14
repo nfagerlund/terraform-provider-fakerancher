@@ -285,11 +285,11 @@ func clusterFieldsV0() map[string]*schema.Schema {
 			Sensitive: true,
 		},
 		"rke_config": {
-			Type:          schema.TypeList,
-			MaxItems:      1,
-			Optional:      true,
-			Computed:      true,
-			ConflictsWith: []string{"aks_config", "eks_config", "gke_config", "k3s_config"},
+			Type:     schema.TypeList,
+			MaxItems: 1,
+			Optional: true,
+			Computed: true,
+			// ConflictsWith: []string{"aks_config", "eks_config", "gke_config", "k3s_config"},
 			Elem: &schema.Resource{
 				Schema: clusterRKEConfigFieldsV0(),
 			},
@@ -504,11 +504,11 @@ func clusterFields() map[string]*schema.Schema {
 			Sensitive: true,
 		},
 		"rke_config": {
-			Type:          schema.TypeList,
-			MaxItems:      1,
-			Optional:      true,
-			Computed:      true,
-			ConflictsWith: []string{"aks_config", "aks_config_v2", "eks_config", "eks_config_v2", "gke_config", "gke_config_v2", "k3s_config", "oke_config", "rke2_config"},
+			Type:     schema.TypeList,
+			MaxItems: 1,
+			Optional: true,
+			Computed: true,
+			// ConflictsWith: []string{"aks_config", "aks_config_v2", "eks_config", "eks_config_v2", "gke_config", "gke_config_v2", "k3s_config", "oke_config", "rke2_config"},
 			Elem: &schema.Resource{
 				Schema: clusterRKEConfigFields(),
 			},
