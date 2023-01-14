@@ -1,4 +1,4 @@
-package rancher2
+package fakerancher
 
 import (
 	"strings"

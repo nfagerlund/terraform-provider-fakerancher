@@ -1,9 +1,8 @@
-package rancher2
+package fakerancher
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
-	managementClient "github.com/rancher/rancher/pkg/client/generated/management/v3"
 )
 
 const (
@@ -16,20 +15,20 @@ const (
 	clusterAlertingEnabledCondition   = "AlertingEnabled"
 )
 
+const (
+	clusterDriverAKS   = "azurekubernetesservice"
+	clusterDriverEKS   = "amazonelasticcontainerservice"
+	clusterDriverGKE   = "googlekubernetesengine"
+	clusterDriverGKEV2 = "GKE"
+	clusterDriverK3S   = "k3s"
+	clusterDriverOKE   = "oraclecontainerengine"
+	clusterDriverRKE2  = "rke2"
+)
+
 var (
 	clusterDrivers                = []string{clusterDriverImported, clusterDriverAKS, clusterDriverEKS, clusterDriverGKE, clusterDriverGKEV2, clusterDriverK3S, clusterDriverOKE, clusterDriverRKE, clusterDriverRKE2}
 	clusterRegistrationTokenNames = []string{clusterRegistrationTokenName, "system"}
 )
-
-//Types
-
-type Cluster struct {
-	managementClient.Cluster
-	AmazonElasticContainerServiceConfig *AmazonElasticContainerServiceConfig `json:"amazonElasticContainerServiceConfig,omitempty" yaml:"amazonElasticContainerServiceConfig,omitempty"`
-	AzureKubernetesServiceConfig        *AzureKubernetesServiceConfig        `json:"azureKubernetesServiceConfig,omitempty" yaml:"azureKubernetesServiceConfig,omitempty"`
-	GoogleKubernetesEngineConfig        *GoogleKubernetesEngineConfig        `json:"googleKubernetesEngineConfig,omitempty" yaml:"googleKubernetesEngineConfig,omitempty"`
-	OracleKubernetesEngineConfig        *OracleKubernetesEngineConfig        `json:"okeEngineConfig,omitempty" yaml:"okeEngineConfig,omitempty"`
-}
 
 // Schemas
 
@@ -132,38 +131,38 @@ func clusterDataFieldsV0() map[string]*schema.Schema {
 				Schema: clusterRKEConfigFieldsV0(),
 			},
 		},
-		"k3s_config": {
-			Type:     schema.TypeList,
-			MaxItems: 1,
-			Computed: true,
-			Elem: &schema.Resource{
-				Schema: clusterK3SConfigFields(),
-			},
-		},
-		"eks_config": {
-			Type:     schema.TypeList,
-			MaxItems: 1,
-			Computed: true,
-			Elem: &schema.Resource{
-				Schema: clusterEKSConfigFields(),
-			},
-		},
-		"aks_config": {
-			Type:     schema.TypeList,
-			MaxItems: 1,
-			Computed: true,
-			Elem: &schema.Resource{
-				Schema: clusterAKSConfigFields(),
-			},
-		},
-		"gke_config": {
-			Type:     schema.TypeList,
-			MaxItems: 1,
-			Computed: true,
-			Elem: &schema.Resource{
-				Schema: clusterGKEConfigFields(),
-			},
-		},
+		// "k3s_config": {
+		// 	Type:     schema.TypeList,
+		// 	MaxItems: 1,
+		// 	Computed: true,
+		// 	Elem: &schema.Resource{
+		// 		Schema: clusterK3SConfigFields(),
+		// 	},
+		// },
+		// "eks_config": {
+		// 	Type:     schema.TypeList,
+		// 	MaxItems: 1,
+		// 	Computed: true,
+		// 	Elem: &schema.Resource{
+		// 		Schema: clusterEKSConfigFields(),
+		// 	},
+		// },
+		// "aks_config": {
+		// 	Type:     schema.TypeList,
+		// 	MaxItems: 1,
+		// 	Computed: true,
+		// 	Elem: &schema.Resource{
+		// 		Schema: clusterAKSConfigFields(),
+		// 	},
+		// },
+		// "gke_config": {
+		// 	Type:     schema.TypeList,
+		// 	MaxItems: 1,
+		// 	Computed: true,
+		// 	Elem: &schema.Resource{
+		// 		Schema: clusterGKEConfigFields(),
+		// 	},
+		// },
 		"default_project_id": {
 			Type:     schema.TypeString,
 			Computed: true,
@@ -184,15 +183,15 @@ func clusterDataFieldsV0() map[string]*schema.Schema {
 				Schema: clusterAuthEndpoint(),
 			},
 		},
-		"cluster_monitoring_input": {
-			Type:        schema.TypeList,
-			MaxItems:    1,
-			Computed:    true,
-			Description: "Cluster monitoring configuration",
-			Elem: &schema.Resource{
-				Schema: monitoringInputFields(),
-			},
-		},
+		// "cluster_monitoring_input": {
+		// 	Type:        schema.TypeList,
+		// 	MaxItems:    1,
+		// 	Computed:    true,
+		// 	Description: "Cluster monitoring configuration",
+		// 	Elem: &schema.Resource{
+		// 		Schema: monitoringInputFields(),
+		// 	},
+		// },
 		"cluster_registration_token": {
 			Type:     schema.TypeList,
 			MaxItems: 1,
@@ -201,28 +200,28 @@ func clusterDataFieldsV0() map[string]*schema.Schema {
 				Schema: clusterRegistationTokenFields(),
 			},
 		},
-		"cluster_template_answers": {
-			Type:        schema.TypeList,
-			Computed:    true,
-			MaxItems:    1,
-			Description: "Cluster template answers",
-			Elem: &schema.Resource{
-				Schema: answerFields(),
-			},
-		},
+		// "cluster_template_answers": {
+		// 	Type:        schema.TypeList,
+		// 	Computed:    true,
+		// 	MaxItems:    1,
+		// 	Description: "Cluster template answers",
+		// 	Elem: &schema.Resource{
+		// 		Schema: answerFields(),
+		// 	},
+		// },
 		"cluster_template_id": {
 			Type:        schema.TypeString,
 			Computed:    true,
 			Description: "Cluster template ID",
 		},
-		"cluster_template_questions": {
-			Type:        schema.TypeList,
-			Computed:    true,
-			Description: "Cluster template questions",
-			Elem: &schema.Resource{
-				Schema: questionFields(),
-			},
-		},
+		// "cluster_template_questions": {
+		// 	Type:        schema.TypeList,
+		// 	Computed:    true,
+		// 	Description: "Cluster template questions",
+		// 	Elem: &schema.Resource{
+		// 		Schema: questionFields(),
+		// 	},
+		// },
 		"cluster_template_revision_id": {
 			Type:        schema.TypeString,
 			Computed:    true,
@@ -248,14 +247,14 @@ func clusterDataFieldsV0() map[string]*schema.Schema {
 			Computed:    true,
 			Description: "Enable project network isolation",
 		},
-		"scheduled_cluster_scan": {
-			Type:        schema.TypeList,
-			Computed:    true,
-			Description: "Cluster scheduled scan",
-			Elem: &schema.Resource{
-				Schema: scheduledClusterScanFields(),
-			},
-		},
+		// "scheduled_cluster_scan": {
+		// 	Type:        schema.TypeList,
+		// 	Computed:    true,
+		// 	Description: "Cluster scheduled scan",
+		// 	Elem: &schema.Resource{
+		// 		Schema: scheduledClusterScanFields(),
+		// 	},
+		// },
 		"annotations": {
 			Type:     schema.TypeMap,
 			Computed: true,
@@ -295,43 +294,43 @@ func clusterFieldsV0() map[string]*schema.Schema {
 				Schema: clusterRKEConfigFieldsV0(),
 			},
 		},
-		"k3s_config": {
-			Type:          schema.TypeList,
-			MaxItems:      1,
-			Optional:      true,
-			Computed:      true,
-			ConflictsWith: []string{"aks_config", "eks_config", "gke_config", "rke_config"},
-			Elem: &schema.Resource{
-				Schema: clusterK3SConfigFields(),
-			},
-		},
-		"eks_config": {
-			Type:          schema.TypeList,
-			MaxItems:      1,
-			Optional:      true,
-			ConflictsWith: []string{"aks_config", "gke_config", "k3s_config", "rke_config"},
-			Elem: &schema.Resource{
-				Schema: clusterEKSConfigFields(),
-			},
-		},
-		"aks_config": {
-			Type:          schema.TypeList,
-			MaxItems:      1,
-			Optional:      true,
-			ConflictsWith: []string{"eks_config", "gke_config", "k3s_config", "rke_config"},
-			Elem: &schema.Resource{
-				Schema: clusterAKSConfigFields(),
-			},
-		},
-		"gke_config": {
-			Type:          schema.TypeList,
-			MaxItems:      1,
-			Optional:      true,
-			ConflictsWith: []string{"aks_config", "eks_config", "k3s_config", "rke_config"},
-			Elem: &schema.Resource{
-				Schema: clusterGKEConfigFields(),
-			},
-		},
+		// "k3s_config": {
+		// 	Type:          schema.TypeList,
+		// 	MaxItems:      1,
+		// 	Optional:      true,
+		// 	Computed:      true,
+		// 	ConflictsWith: []string{"aks_config", "eks_config", "gke_config", "rke_config"},
+		// 	Elem: &schema.Resource{
+		// 		Schema: clusterK3SConfigFields(),
+		// 	},
+		// },
+		// "eks_config": {
+		// 	Type:          schema.TypeList,
+		// 	MaxItems:      1,
+		// 	Optional:      true,
+		// 	ConflictsWith: []string{"aks_config", "gke_config", "k3s_config", "rke_config"},
+		// 	Elem: &schema.Resource{
+		// 		Schema: clusterEKSConfigFields(),
+		// 	},
+		// },
+		// "aks_config": {
+		// 	Type:          schema.TypeList,
+		// 	MaxItems:      1,
+		// 	Optional:      true,
+		// 	ConflictsWith: []string{"eks_config", "gke_config", "k3s_config", "rke_config"},
+		// 	Elem: &schema.Resource{
+		// 		Schema: clusterAKSConfigFields(),
+		// 	},
+		// },
+		// "gke_config": {
+		// 	Type:          schema.TypeList,
+		// 	MaxItems:      1,
+		// 	Optional:      true,
+		// 	ConflictsWith: []string{"aks_config", "eks_config", "k3s_config", "rke_config"},
+		// 	Elem: &schema.Resource{
+		// 		Schema: clusterGKEConfigFields(),
+		// 	},
+		// },
 		"default_project_id": {
 			Type:     schema.TypeString,
 			Computed: true,
@@ -353,15 +352,15 @@ func clusterFieldsV0() map[string]*schema.Schema {
 				Schema: clusterAuthEndpoint(),
 			},
 		},
-		"cluster_monitoring_input": {
-			Type:        schema.TypeList,
-			MaxItems:    1,
-			Optional:    true,
-			Description: "Cluster monitoring configuration",
-			Elem: &schema.Resource{
-				Schema: monitoringInputFields(),
-			},
-		},
+		// "cluster_monitoring_input": {
+		// 	Type:        schema.TypeList,
+		// 	MaxItems:    1,
+		// 	Optional:    true,
+		// 	Description: "Cluster monitoring configuration",
+		// 	Elem: &schema.Resource{
+		// 		Schema: monitoringInputFields(),
+		// 	},
+		// },
 		"cluster_registration_token": {
 			Type:     schema.TypeList,
 			MaxItems: 1,
@@ -370,29 +369,29 @@ func clusterFieldsV0() map[string]*schema.Schema {
 				Schema: clusterRegistationTokenFields(),
 			},
 		},
-		"cluster_template_answers": {
-			Type:        schema.TypeList,
-			Optional:    true,
-			MaxItems:    1,
-			Computed:    true,
-			Description: "Cluster template answers",
-			Elem: &schema.Resource{
-				Schema: answerFields(),
-			},
-		},
+		// "cluster_template_answers": {
+		// 	Type:        schema.TypeList,
+		// 	Optional:    true,
+		// 	MaxItems:    1,
+		// 	Computed:    true,
+		// 	Description: "Cluster template answers",
+		// 	Elem: &schema.Resource{
+		// 		Schema: answerFields(),
+		// 	},
+		// },
 		"cluster_template_id": {
 			Type:        schema.TypeString,
 			Optional:    true,
 			Description: "Cluster template ID",
 		},
-		"cluster_template_questions": {
-			Type:        schema.TypeList,
-			Optional:    true,
-			Description: "Cluster template questions",
-			Elem: &schema.Resource{
-				Schema: questionFields(),
-			},
-		},
+		// "cluster_template_questions": {
+		// 	Type:        schema.TypeList,
+		// 	Optional:    true,
+		// 	Description: "Cluster template questions",
+		// 	Elem: &schema.Resource{
+		// 		Schema: questionFields(),
+		// 	},
+		// },
 		"cluster_template_revision_id": {
 			Type:        schema.TypeString,
 			Optional:    true,
@@ -448,16 +447,16 @@ func clusterFieldsV0() map[string]*schema.Schema {
 			Computed:    true,
 			Description: "Enable project network isolation",
 		},
-		"scheduled_cluster_scan": {
-			Type:        schema.TypeList,
-			Optional:    true,
-			Computed:    true,
-			MaxItems:    1,
-			Description: "Cluster scheduled scan",
-			Elem: &schema.Resource{
-				Schema: scheduledClusterScanFields(),
-			},
-		},
+		// "scheduled_cluster_scan": {
+		// 	Type:        schema.TypeList,
+		// 	Optional:    true,
+		// 	Computed:    true,
+		// 	MaxItems:    1,
+		// 	Description: "Cluster scheduled scan",
+		// 	Elem: &schema.Resource{
+		// 		Schema: scheduledClusterScanFields(),
+		// 	},
+		// },
 		"windows_prefered_cluster": {
 			Type:        schema.TypeBool,
 			Optional:    true,
@@ -480,14 +479,14 @@ func clusterFields() map[string]*schema.Schema {
 			Type:     schema.TypeString,
 			Required: true,
 		},
-		"agent_env_vars": {
-			Type:        schema.TypeList,
-			Optional:    true,
-			Description: "Optional Agent Env Vars for Rancher agent",
-			Elem: &schema.Resource{
-				Schema: envVarFields(),
-			},
-		},
+		// "agent_env_vars": {
+		// 	Type:        schema.TypeList,
+		// 	Optional:    true,
+		// 	Description: "Optional Agent Env Vars for Rancher agent",
+		// 	Elem: &schema.Resource{
+		// 		Schema: envVarFields(),
+		// 	},
+		// },
 		"driver": {
 			Type:         schema.TypeString,
 			Optional:     true,
@@ -514,90 +513,90 @@ func clusterFields() map[string]*schema.Schema {
 				Schema: clusterRKEConfigFields(),
 			},
 		},
-		"rke2_config": {
-			Type:          schema.TypeList,
-			MaxItems:      1,
-			Optional:      true,
-			Computed:      true,
-			ConflictsWith: []string{"aks_config", "aks_config_v2", "eks_config", "eks_config_v2", "gke_config", "gke_config_v2", "k3s_config", "oke_config", "rke_config"},
-			Elem: &schema.Resource{
-				Schema: clusterRKE2ConfigFields(),
-			},
-		},
-		"k3s_config": {
-			Type:          schema.TypeList,
-			MaxItems:      1,
-			Optional:      true,
-			Computed:      true,
-			ConflictsWith: []string{"aks_config", "aks_config_v2", "eks_config", "eks_config_v2", "gke_config", "gke_config_v2", "oke_config", "rke_config", "rke2_config"},
-			Elem: &schema.Resource{
-				Schema: clusterK3SConfigFields(),
-			},
-		},
-		"eks_config": {
-			Type:          schema.TypeList,
-			MaxItems:      1,
-			Optional:      true,
-			ConflictsWith: []string{"aks_config", "aks_config_v2", "eks_config_v2", "gke_config", "gke_config_v2", "k3s_config", "oke_config", "rke_config", "rke2_config"},
-			Elem: &schema.Resource{
-				Schema: clusterEKSConfigFields(),
-			},
-		},
-		"eks_config_v2": {
-			Type:          schema.TypeList,
-			MaxItems:      1,
-			Optional:      true,
-			Computed:      true,
-			ConflictsWith: []string{"aks_config", "aks_config_v2", "eks_config", "gke_config", "gke_config_v2", "k3s_config", "oke_config", "rke_config", "rke2_config"},
-			Elem: &schema.Resource{
-				Schema: clusterEKSConfigV2Fields(),
-			},
-		},
-		"aks_config": {
-			Type:          schema.TypeList,
-			MaxItems:      1,
-			Optional:      true,
-			ConflictsWith: []string{"eks_config", "aks_config_v2", "eks_config_v2", "gke_config", "gke_config_v2", "k3s_config", "oke_config", "rke_config", "rke2_config"},
-			Elem: &schema.Resource{
-				Schema: clusterAKSConfigFields(),
-			},
-		},
-		"aks_config_v2": {
-			Type:          schema.TypeList,
-			MaxItems:      1,
-			Optional:      true,
-			ConflictsWith: []string{"aks_config", "eks_config", "eks_config_v2", "gke_config", "gke_config_v2", "k3s_config", "oke_config", "rke_config", "rke2_config"},
-			Elem: &schema.Resource{
-				Schema: clusterAKSConfigV2Fields(),
-			},
-		},
-		"gke_config": {
-			Type:          schema.TypeList,
-			MaxItems:      1,
-			Optional:      true,
-			ConflictsWith: []string{"aks_config", "aks_config_v2", "eks_config", "eks_config_v2", "gke_config_v2", "k3s_config", "oke_config", "rke_config", "rke2_config"},
-			Elem: &schema.Resource{
-				Schema: clusterGKEConfigFields(),
-			},
-		},
-		"gke_config_v2": {
-			Type:          schema.TypeList,
-			MaxItems:      1,
-			Optional:      true,
-			ConflictsWith: []string{"aks_config", "aks_config_v2", "eks_config", "eks_config_v2", "gke_config", "k3s_config", "oke_config", "rke_config", "rke2_config"},
-			Elem: &schema.Resource{
-				Schema: clusterGKEConfigV2Fields(),
-			},
-		},
-		"oke_config": {
-			Type:          schema.TypeList,
-			MaxItems:      1,
-			Optional:      true,
-			ConflictsWith: []string{"aks_config", "aks_config_v2", "eks_config", "eks_config_v2", "gke_config", "gke_config_v2", "k3s_config", "rke_config", "rke2_config"},
-			Elem: &schema.Resource{
-				Schema: clusterOKEConfigFields(),
-			},
-		},
+		// "rke2_config": {
+		// 	Type:          schema.TypeList,
+		// 	MaxItems:      1,
+		// 	Optional:      true,
+		// 	Computed:      true,
+		// 	ConflictsWith: []string{"aks_config", "aks_config_v2", "eks_config", "eks_config_v2", "gke_config", "gke_config_v2", "k3s_config", "oke_config", "rke_config"},
+		// 	Elem: &schema.Resource{
+		// 		Schema: clusterRKE2ConfigFields(),
+		// 	},
+		// },
+		// "k3s_config": {
+		// 	Type:          schema.TypeList,
+		// 	MaxItems:      1,
+		// 	Optional:      true,
+		// 	Computed:      true,
+		// 	ConflictsWith: []string{"aks_config", "aks_config_v2", "eks_config", "eks_config_v2", "gke_config", "gke_config_v2", "oke_config", "rke_config", "rke2_config"},
+		// 	Elem: &schema.Resource{
+		// 		Schema: clusterK3SConfigFields(),
+		// 	},
+		// },
+		// "eks_config": {
+		// 	Type:          schema.TypeList,
+		// 	MaxItems:      1,
+		// 	Optional:      true,
+		// 	ConflictsWith: []string{"aks_config", "aks_config_v2", "eks_config_v2", "gke_config", "gke_config_v2", "k3s_config", "oke_config", "rke_config", "rke2_config"},
+		// 	Elem: &schema.Resource{
+		// 		Schema: clusterEKSConfigFields(),
+		// 	},
+		// },
+		// "eks_config_v2": {
+		// 	Type:          schema.TypeList,
+		// 	MaxItems:      1,
+		// 	Optional:      true,
+		// 	Computed:      true,
+		// 	ConflictsWith: []string{"aks_config", "aks_config_v2", "eks_config", "gke_config", "gke_config_v2", "k3s_config", "oke_config", "rke_config", "rke2_config"},
+		// 	Elem: &schema.Resource{
+		// 		Schema: clusterEKSConfigV2Fields(),
+		// 	},
+		// },
+		// "aks_config": {
+		// 	Type:          schema.TypeList,
+		// 	MaxItems:      1,
+		// 	Optional:      true,
+		// 	ConflictsWith: []string{"eks_config", "aks_config_v2", "eks_config_v2", "gke_config", "gke_config_v2", "k3s_config", "oke_config", "rke_config", "rke2_config"},
+		// 	Elem: &schema.Resource{
+		// 		Schema: clusterAKSConfigFields(),
+		// 	},
+		// },
+		// "aks_config_v2": {
+		// 	Type:          schema.TypeList,
+		// 	MaxItems:      1,
+		// 	Optional:      true,
+		// 	ConflictsWith: []string{"aks_config", "eks_config", "eks_config_v2", "gke_config", "gke_config_v2", "k3s_config", "oke_config", "rke_config", "rke2_config"},
+		// 	Elem: &schema.Resource{
+		// 		Schema: clusterAKSConfigV2Fields(),
+		// 	},
+		// },
+		// "gke_config": {
+		// 	Type:          schema.TypeList,
+		// 	MaxItems:      1,
+		// 	Optional:      true,
+		// 	ConflictsWith: []string{"aks_config", "aks_config_v2", "eks_config", "eks_config_v2", "gke_config_v2", "k3s_config", "oke_config", "rke_config", "rke2_config"},
+		// 	Elem: &schema.Resource{
+		// 		Schema: clusterGKEConfigFields(),
+		// 	},
+		// },
+		// "gke_config_v2": {
+		// 	Type:          schema.TypeList,
+		// 	MaxItems:      1,
+		// 	Optional:      true,
+		// 	ConflictsWith: []string{"aks_config", "aks_config_v2", "eks_config", "eks_config_v2", "gke_config", "k3s_config", "oke_config", "rke_config", "rke2_config"},
+		// 	Elem: &schema.Resource{
+		// 		Schema: clusterGKEConfigV2Fields(),
+		// 	},
+		// },
+		// "oke_config": {
+		// 	Type:          schema.TypeList,
+		// 	MaxItems:      1,
+		// 	Optional:      true,
+		// 	ConflictsWith: []string{"aks_config", "aks_config_v2", "eks_config", "eks_config_v2", "gke_config", "gke_config_v2", "k3s_config", "rke_config", "rke2_config"},
+		// 	Elem: &schema.Resource{
+		// 		Schema: clusterOKEConfigFields(),
+		// 	},
+		// },
 		"default_project_id": {
 			Type:     schema.TypeString,
 			Computed: true,
@@ -619,15 +618,15 @@ func clusterFields() map[string]*schema.Schema {
 				Schema: clusterAuthEndpoint(),
 			},
 		},
-		"cluster_monitoring_input": {
-			Type:        schema.TypeList,
-			MaxItems:    1,
-			Optional:    true,
-			Description: "Cluster monitoring configuration",
-			Elem: &schema.Resource{
-				Schema: monitoringInputFields(),
-			},
-		},
+		// "cluster_monitoring_input": {
+		// 	Type:        schema.TypeList,
+		// 	MaxItems:    1,
+		// 	Optional:    true,
+		// 	Description: "Cluster monitoring configuration",
+		// 	Elem: &schema.Resource{
+		// 		Schema: monitoringInputFields(),
+		// 	},
+		// },
 		"cluster_registration_token": {
 			Type:     schema.TypeList,
 			MaxItems: 1,
@@ -636,30 +635,30 @@ func clusterFields() map[string]*schema.Schema {
 				Schema: clusterRegistationTokenFields(),
 			},
 		},
-		"cluster_template_answers": {
-			Type:        schema.TypeList,
-			Optional:    true,
-			MaxItems:    1,
-			Computed:    true,
-			Description: "Cluster template answers",
-			Elem: &schema.Resource{
-				Schema: answerFields(),
-			},
-		},
+		// "cluster_template_answers": {
+		// 	Type:        schema.TypeList,
+		// 	Optional:    true,
+		// 	MaxItems:    1,
+		// 	Computed:    true,
+		// 	Description: "Cluster template answers",
+		// 	Elem: &schema.Resource{
+		// 		Schema: answerFields(),
+		// 	},
+		// },
 		"cluster_template_id": {
 			Type:        schema.TypeString,
 			Optional:    true,
 			Description: "Cluster template ID",
 		},
-		"cluster_template_questions": {
-			Type:        schema.TypeList,
-			Optional:    true,
-			Computed:    true,
-			Description: "Cluster template questions",
-			Elem: &schema.Resource{
-				Schema: questionFields(),
-			},
-		},
+		// "cluster_template_questions": {
+		// 	Type:        schema.TypeList,
+		// 	Optional:    true,
+		// 	Computed:    true,
+		// 	Description: "Cluster template questions",
+		// 	Elem: &schema.Resource{
+		// 		Schema: questionFields(),
+		// 	},
+		// },
 		"cluster_template_revision_id": {
 			Type:        schema.TypeString,
 			Optional:    true,
@@ -720,16 +719,16 @@ func clusterFields() map[string]*schema.Schema {
 			Computed:    true,
 			Description: "Enable project network isolation",
 		},
-		"scheduled_cluster_scan": {
-			Type:        schema.TypeList,
-			Optional:    true,
-			Computed:    true,
-			MaxItems:    1,
-			Description: "Cluster scheduled scan",
-			Elem: &schema.Resource{
-				Schema: scheduledClusterScanFields(),
-			},
-		},
+		// "scheduled_cluster_scan": {
+		// 	Type:        schema.TypeList,
+		// 	Optional:    true,
+		// 	Computed:    true,
+		// 	MaxItems:    1,
+		// 	Description: "Cluster scheduled scan",
+		// 	Elem: &schema.Resource{
+		// 		Schema: scheduledClusterScanFields(),
+		// 	},
+		// },
 		"windows_prefered_cluster": {
 			Type:        schema.TypeBool,
 			Optional:    true,

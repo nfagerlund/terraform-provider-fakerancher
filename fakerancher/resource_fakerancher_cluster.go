@@ -13,7 +13,7 @@ func resourceFakerancherCluster() *schema.Resource {
 		Read:   clusterRead,
 		Delete: clusterDelete,
 		Update: clusterUpdate,
-		Schema: clusterRKEConfigServicesEtcdFields(),
+		Schema: clusterFields(),
 	}
 }
 
