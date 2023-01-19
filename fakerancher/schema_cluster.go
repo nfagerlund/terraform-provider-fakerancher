@@ -513,6 +513,46 @@ func clusterFields() map[string]*schema.Schema {
 				Schema: clusterRKEConfigFields(),
 			},
 		},
+		"unnested_rke_config_services": {
+			Type:        schema.TypeList,
+			Description: "Kubernetes cluster services",
+			MaxItems:    1,
+			Optional:    true,
+			Computed:    true,
+			Elem: &schema.Resource{
+				Schema: clusterRKEConfigServicesFields(),
+			},
+		},
+		"unnested_rke_config_services_etcd": {
+			Type:     schema.TypeList,
+			MaxItems: 1,
+			Optional: true,
+			Computed: true,
+			Elem: &schema.Resource{
+				Schema: clusterRKEConfigServicesEtcdFields(),
+			},
+		},
+		"extranested_rke_config": {
+			Type:        schema.TypeList,
+			Description: "extra layer of nesting before rke_cofig",
+			MaxItems:    1,
+			Optional:    true,
+			Computed:    true,
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"rke_config": {
+						Type:     schema.TypeList,
+						MaxItems: 1,
+						Optional: true,
+						Computed: true,
+						// ConflictsWith: []string{"aks_config", "aks_config_v2", "eks_config", "eks_config_v2", "gke_config", "gke_config_v2", "k3s_config", "oke_config", "rke2_config"},
+						Elem: &schema.Resource{
+							Schema: clusterRKEConfigFields(),
+						},
+					},
+				},
+			},
+		},
 		// "rke2_config": {
 		// 	Type:          schema.TypeList,
 		// 	MaxItems:      1,
